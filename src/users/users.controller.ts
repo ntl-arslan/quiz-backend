@@ -25,6 +25,10 @@ export class UsersController {
   getUserByUserName(@Param('usrname') usrname: string) {
     return this.usersService.getUserByUserName(usrname);
   }
+  @Put('deleteUser/:id')
+  deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
+  }
   @Put('updateUser/:id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
