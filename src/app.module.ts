@@ -6,21 +6,22 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'almari123',
-      database: 'testdb',
-      autoLoadEntities: true,
-      synchronize: false,
-    }),
-    UsersModule,
-    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.PGHOST || 'localhost',
+      port: 5432,
+      username: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
+      database: process.env.PGDATABASE,
+      autoLoadEntities: true,
+      synchronize: true,
+      ssl: true,
+    }),
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

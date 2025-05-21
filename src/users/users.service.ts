@@ -135,7 +135,7 @@ export class UsersService {
         where: { id: id } as any,
       });
       if (user) {
-        // Set the status to 'inactive' instead of deleting the user
+       
         user.status = 'inactive';
         await this.userRepository.update(id, {
           status: 'inactive',

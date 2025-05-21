@@ -42,7 +42,7 @@ export class AuthService {
         status: 'active',
         role: 'user',
         datetime: new Date(),
-        modified_datetime: null,
+        modified_datetime: new Date(),
       });
 
       const savedUser = await this.userRepository.save(newUser);
@@ -57,6 +57,7 @@ export class AuthService {
         data: userWithoutPassword,
       };
     } catch (err) {
+      console.log(err);
       return {
         status: 'ERROR',
         httpcode: HttpStatus.EXPECTATION_FAILED,
