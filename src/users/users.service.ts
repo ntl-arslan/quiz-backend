@@ -59,7 +59,6 @@ export class UsersService {
         };
       }
     } catch (err) {
-      console.log(err, 'error');
       return {
         status: 'ERROR',
         httpcode: HttpStatus.EXPECTATION_FAILED,
@@ -135,7 +134,6 @@ export class UsersService {
         where: { id: id } as any,
       });
       if (user) {
-       
         user.status = 'inactive';
         await this.userRepository.update(id, {
           status: 'inactive',
