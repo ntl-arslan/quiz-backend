@@ -28,6 +28,11 @@ export class StacksController {
     return this.stacksService.getStackByName(name);
   }
 
+  @Get('getStackByName/:id')
+  getStackByID(@Param('id') id: string) {
+    return this.stacksService.getStackByID(id);
+  }
+
   @Put('updateStack/:id')
   updateStack(@Body() updateStackDto: CreateStackDto, @Param('id') id: string) {
     return this.stacksService.updateStack(id, updateStackDto);
