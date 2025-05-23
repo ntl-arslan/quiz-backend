@@ -22,6 +22,11 @@ export class StacksController {
   allActiveStacks() {
     return this.stacksService.allActiveStacks();
   }
+  @Get('getStackByName/:name')
+  getStackByName(@Param('name') name: string) {
+    return this.stacksService.getStackByName(name);
+  }
+
   @Post('createStack')
   createStack(@Body() createStackDto: CreateStackDto) {
     return this.stacksService.createStack(createStackDto);

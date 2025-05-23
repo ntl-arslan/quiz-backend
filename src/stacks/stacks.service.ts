@@ -70,6 +70,37 @@ export class StacksService {
       };
     }
   }
+  async getStackByName(name: string) {
+    try {
+      const stack = await this.stackRepo.findOne({
+        where: {
+          name: name,
+        },
+      });
+      if (stack) {
+        return {
+          status: 'SUCCESS',
+          httpcode: HttpStatus.OK,
+          message: 'Stack fetched successfully.',
+          data: stack,
+        };
+      } else {
+        return {
+          status: 'FAILURE',
+          httpcode: HttpStatus.OK,
+          message: 'No Stack found.',
+          data: [],
+        };
+      }
+    } catch (err) {
+      return {
+        status: 'ERROR',
+        httpcode: HttpStatus.EXPECTATION_FAILED,
+        message: 'Failed to fetch stack.',
+        data: [],
+      };
+    }
+  }
 
   async createStack(createStackDto: CreateStackDto) {
     try {
