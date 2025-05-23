@@ -28,7 +28,7 @@ export class StacksController {
     return this.stacksService.getStackByName(name);
   }
 
-  @Get('getStackByName/:id')
+  @Get('getStackByID/:id')
   getStackByID(@Param('id') id: string) {
     return this.stacksService.getStackByID(id);
   }
