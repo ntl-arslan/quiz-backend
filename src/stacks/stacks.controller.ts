@@ -33,7 +33,7 @@ export class StacksController {
     return this.stacksService.updateStack(id, updateStackDto);
   }
 
-  @Put('updateStack/:id')
+  @Put('deleteStack/:id')
   deleteStack(@Param('id') id: string) {
     return this.stacksService.deleteStack(id);
   }
