@@ -40,26 +40,40 @@ export class StacksService {
   }
   async createStack(createStackDto: CreateStackDto) {
     try {
-      const payload = {
-        ...createStackDto,
-        datetime: new Date(),
-        modifiedDatetime: new Date(),
-      };
-      const newStack = this.stackRepo.save(payload);
-      if (newStack) {
+      const isAlrExists = await this.stackRepo.findOne({
+        where: {
+          name: createStackDto.name,
+        },
+      });
+      if (isAlrExists) {
         return {
-          status: 'SUCCESS',
-          httpcode: HttpStatus.CREATED,
-          message: 'Stack created successfully.',
-          data: newStack,
-        };
-      } else {
-        return {
-          status: 'SUCCESS',
-          httpcode: HttpStatus.CREATED,
-          message: 'Stack created successfully.',
+          status: 'FAILURE',
+          httpcode: HttpStatus.OK,
+          message: 'Stack already exists.',
           data: [],
         };
+      } else {
+        const payload = {
+          ...createStackDto,
+          datetime: new Date(),
+          modifiedDatetime: new Date(),
+        };
+        const newStack = await this.stackRepo.save(payload);
+        if (newStack) {
+          return {
+            status: 'SUCCESS',
+            httpcode: HttpStatus.CREATED,
+            message: 'Stack created successfully.',
+            data: newStack,
+          };
+        } else {
+          return {
+            status: 'FAILURE',
+            httpcode: HttpStatus.CREATED,
+            message: 'Stack not created.',
+            data: [],
+          };
+        }
       }
     } catch (error) {
       return {
