@@ -38,6 +38,39 @@ export class StacksService {
       };
     }
   }
+  async allActiveStacks() {
+    try {
+      const allActiveStacks = await this.stackRepo.find({
+        where: {
+          status: 'active',
+        },
+      });
+
+      if (allActiveStacks.length > 0) {
+        return {
+          status: 'SUCCESS',
+          httpcode: HttpStatus.OK,
+          message: 'All Active Stacks fetched successfully.',
+          data: allActiveStacks,
+        };
+      } else {
+        return {
+          status: 'FAILURE',
+          httpcode: HttpStatus.OK,
+          message: 'No Active Stacks found.',
+          data: [],
+        };
+      }
+    } catch (error) {
+      return {
+        status: 'ERROR',
+        httpcode: HttpStatus.EXPECTATION_FAILED,
+        message: 'Failed to fetch stacks.',
+        data: [],
+      };
+    }
+  }
+
   async createStack(createStackDto: CreateStackDto) {
     try {
       const isAlrExists = await this.stackRepo.findOne({

@@ -18,6 +18,10 @@ export class StacksController {
   getAllStacks() {
     return this.stacksService.getAllStacks();
   }
+  @Get('allActiveStacks')
+  allActiveStacks() {
+    return this.stacksService.allActiveStacks();
+  }
   @Post('createStack')
   createStack(@Body() createStackDto: CreateStackDto) {
     return this.stacksService.createStack(createStackDto);
