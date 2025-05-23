@@ -14,5 +14,5 @@ export class CreateStackDto {
 
   @IsOptional()
   @IsString()
-  status?: string; // 'active' | 'disabled'
+  status?: string;
 }

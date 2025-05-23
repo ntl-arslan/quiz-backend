@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { StacksService } from './stacks.service';
 import { CreateStackDto } from './dto/create-stack.dto';
@@ -25,6 +26,16 @@ export class StacksController {
   @Get('getStackByName/:name')
   getStackByName(@Param('name') name: string) {
     return this.stacksService.getStackByName(name);
+  }
+
+  @Put('updateStack/:id')
+  updateStack(@Body() updateStackDto: CreateStackDto, @Param('id') id: string) {
+    return this.stacksService.updateStack(id, updateStackDto);
+  }
+
+  @Put('updateStack/:id')
+  deleteStack(@Param('id') id: string) {
+    return this.stacksService.deleteStack(id);
   }
 
   @Post('createStack')

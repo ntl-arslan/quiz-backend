@@ -148,4 +148,94 @@ export class StacksService {
       };
     }
   }
+  async updateStack(id: string, updateStackDto: CreateStackDto) {
+    try {
+      const stack = await this.stackRepo.findOne({
+        where: {
+          id: id,
+        } as unknown,
+      });
+      if (!stack) {
+        return {
+          status: 'FAILURE',
+          httpcode: HttpStatus.OK,
+          message: 'Stack not found.',
+          data: [],
+        };
+      } else {
+        const payload = {
+          ...updateStackDto,
+          modifiedDatetime: new Date(),
+        };
+        const updatedStack = await this.stackRepo.update(id, payload);
+        if (updatedStack) {
+          return {
+            status: 'SUCCESS',
+            httpcode: HttpStatus.OK,
+            message: 'Stack updated successfully.',
+            data: updatedStack,
+          };
+        } else {
+          return {
+            status: 'FAILURE',
+            httpcode: HttpStatus.OK,
+            message: 'Stack not updated.',
+            data: [],
+          };
+        }
+      }
+    } catch (err) {
+      return {
+        status: 'ERROR',
+        httpcode: HttpStatus.EXPECTATION_FAILED,
+        message: 'Failed to update stack.',
+        data: [],
+      };
+    }
+  }
+  async deleteStack(id: string) {
+    try {
+      const isStackExists = await this.stackRepo.findOne({
+        where: {
+          id: id,
+        } as unknown,
+      });
+      if (!isStackExists) {
+        return {
+          status: 'FAILURE',
+          httpcode: HttpStatus.OK,
+          message: 'Stack not found.',
+          data: [],
+        };
+      } else {
+        const payload = {
+          status: 'inactive',
+          modifiedDatetime: new Date(),
+        };
+        const updatedStack = await this.stackRepo.update(id, payload);
+        if (updatedStack) {
+          return {
+            status: 'SUCCESS',
+            httpcode: HttpStatus.OK,
+            message: 'Stack deleted successfully.',
+            data: updatedStack,
+          };
+        } else {
+          return {
+            status: 'FAILURE',
+            httpcode: HttpStatus.OK,
+            message: 'Stack not deleted.',
+            data: [],
+          };
+        }
+      }
+    } catch (err) {
+      return {
+        status: 'ERROR',
+        httpcode: HttpStatus.EXPECTATION_FAILED,
+        message: 'Failed to delete stack.',
+        data: [],
+      };
+    }
+  }
 }
