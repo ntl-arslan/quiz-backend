@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
+import { UpdateQuestionDto } from './dto/update-question.dto';
 
 
 @Controller('questions')
@@ -31,4 +32,11 @@ export class QuestionsController {
 			deleteStack(@Param('id') id: string) {
 				return this.questionsService.deleteQuestionsAgainstStack(id);
 			}
+			@Put('updateQuestion/:id')
+updateQuestion(
+  @Param('id') id: string,
+  @Body() updateDto: UpdateQuestionDto,
+) {
+  return this.questionsService.updateQuestion(parseInt(id), updateDto);
+}
 }

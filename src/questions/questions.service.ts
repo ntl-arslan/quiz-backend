@@ -256,6 +256,43 @@ async getAllActiveQuestions ()
 		};
 	}
 }
+async updateQuestion(id: number, updateDto: UpdateQuestionDto) {
+  try {
+    const question = await this.questionRepo.findOne({ where: { id } });
+
+    if (!question) {
+      return {
+        status: 'FAILURE',
+        httpcode: HttpStatus.NOT_FOUND,
+        message: 'Question not found.',
+        data: [],
+      };
+    }
+
+    await this.questionRepo.update(id, {
+      ...updateDto,
+      modified_datetime: new Date(),
+    });
+
+    const updated = await this.questionRepo.findOne({ where: { id } });
+
+    return {
+      status: 'SUCCESS',
+      httpcode: HttpStatus.OK,
+      message: 'Question updated successfully.',
+      data: updated,
+    };
+  } catch (error) {
+    console.error('Update error:', error);
+    return {
+      status: 'ERROR',
+      httpcode: HttpStatus.EXPECTATION_FAILED,
+      message: 'Failed to update question.',
+      data: [],
+    };
+  }
+}
+
 
 
 	
