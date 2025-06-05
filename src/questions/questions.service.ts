@@ -126,39 +126,39 @@ async getAllActiveQuestions ()
 		}
 	}
 	 async getQuestionByStackID(id: string) {
-    try {
-      const questions = await this.questionRepo.find({
-        where: {
-          stack: { id: parseInt(id) },
-        },
-        relations: ['stack'], 
-      });
+		try {
+			const questions = await this.questionRepo.find({
+				where: {
+					stack: { id: parseInt(id) },
+				},
+				relations: ['stack'], 
+			});
 
-      if (questions.length > 0) {
-        return {
-          status: 'SUCCESS',
-          httpcode: HttpStatus.OK,
-          message: 'Questions fetched successfully.',
-          data: questions,
-        };
-      } else {
-        return {
-          status: 'FAILURE',
-          httpcode: HttpStatus.OK,
-          message: 'No Question found.',
-          data: [],
-        };
-      }
-    } catch (err) {
-      console.error('Error fetching question:', err);
-      return {
-        status: 'ERROR',
-        httpcode: HttpStatus.EXPECTATION_FAILED,
-        message: 'Failed to fetch question.',
-        data: [],
-      };
-    }
-  }
+			if (questions.length > 0) {
+				return {
+					status: 'SUCCESS',
+					httpcode: HttpStatus.OK,
+					message: 'Questions fetched successfully.',
+					data: questions,
+				};
+			} else {
+				return {
+					status: 'FAILURE',
+					httpcode: HttpStatus.OK,
+					message: 'No Question found.',
+					data: [],
+				};
+			}
+		} catch (err) {
+			console.error('Error fetching question:', err);
+			return {
+				status: 'ERROR',
+				httpcode: HttpStatus.EXPECTATION_FAILED,
+				message: 'Failed to fetch question.',
+				data: [],
+			};
+		}
+	}
 	async createQuestionAgainstStack (createQuestionDto:CreateQuestionDto) 
 	{
 		try
@@ -212,6 +212,52 @@ async getAllActiveQuestions ()
 			};
 		}
 	}
+	async deleteQuestionsAgainstStack(id) {
+	try {
+		const question = await this.questionRepo.findOne({ where: { id } });
+
+		if (!question) {
+			return {
+				status: 'FAILURE',
+				httpcode: HttpStatus.OK,
+				message: 'Question does not exist.',
+				data: [],
+			};
+		}
+
+		if (question.status === 'inactive') {
+			return {
+				status: 'SUCCESS',
+				httpcode: HttpStatus.OK,
+				message: 'Question is already deleted (inactive).',
+				data: [],
+			};
+		}
+
+	 
+		await this.questionRepo.update(id, {
+			status: 'inactive',
+			modified_datetime: new Date(),
+		});
+
+		return {
+			status: 'SUCCESS',
+			httpcode: HttpStatus.OK,
+			message: 'Question marked as inactive successfully.',
+			data: [],
+		};
+	} catch (err) {
+		console.error('Delete error:', err);
+		return {
+			status: 'ERROR',
+			httpcode: HttpStatus.EXPECTATION_FAILED,
+			message: 'Failed to delete question.',
+			data: [],
+		};
+	}
+}
+
+
 	
 }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 
@@ -27,4 +27,8 @@ export class QuestionsController {
 		createStack(@Body() createQuestionDto: CreateQuestionDto) {
 			return this.questionsService.createQuestionAgainstStack(createQuestionDto);
 		}
+		@Put('deleteQuestionsAgainstStack/:id')
+			deleteStack(@Param('id') id: string) {
+				return this.questionsService.deleteQuestionsAgainstStack(id);
+			}
 }
