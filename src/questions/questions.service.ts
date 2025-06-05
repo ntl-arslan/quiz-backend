@@ -129,7 +129,7 @@ async getAllActiveQuestions ()
 		try {
 			const question = await this.questionRepo.findOne({
 				where: {
-					id: id,
+					stackid: id,
 				} as unknown,
 			});
 			if (question) {
