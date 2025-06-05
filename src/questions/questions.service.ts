@@ -125,37 +125,40 @@ async getAllActiveQuestions ()
 					};
 		}
 	}
-	async getQuestionByID(id: string) {
-		try {
-			const question = await this.questionRepo.findOne({
-				where: {
-					stackid: id,
-				} as unknown,
-			});
-			if (question) {
-				return {
-					status: 'SUCCESS',
-					httpcode: HttpStatus.OK,
-					message: 'Questions fetched successfully.',
-					data: question,
-				};
-			} else {
-				return {
-					status: 'FAILURE',
-					httpcode: HttpStatus.OK,
-					message: 'No Question found.',
-					data: [],
-				};
-			}
-		} catch (err) {
-			return {
-				status: 'ERROR',
-				httpcode: HttpStatus.EXPECTATION_FAILED,
-				message: 'Failed to fetch question.',
-				data: [],
-			};
-		}
-	}
+	 async getQuestionByID(id: string) {
+    try {
+      const questions = await this.questionRepo.find({
+        where: {
+          stack: { id: parseInt(id) },
+        },
+        relations: ['stack'], 
+      });
+
+      if (questions.length > 0) {
+        return {
+          status: 'SUCCESS',
+          httpcode: HttpStatus.OK,
+          message: 'Questions fetched successfully.',
+          data: questions,
+        };
+      } else {
+        return {
+          status: 'FAILURE',
+          httpcode: HttpStatus.OK,
+          message: 'No Question found.',
+          data: [],
+        };
+      }
+    } catch (err) {
+      console.error('Error fetching question:', err);
+      return {
+        status: 'ERROR',
+        httpcode: HttpStatus.EXPECTATION_FAILED,
+        message: 'Failed to fetch question.',
+        data: [],
+      };
+    }
+  }
 	async createQuestionAgainstStack (createQuestionDto:CreateQuestionDto) 
 	{
 		try
