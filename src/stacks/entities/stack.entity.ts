@@ -2,7 +2,7 @@ import { Question } from '../../questions/entities/question.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 
-@Entity('stacks')
+@Entity('quiz_stacks')
 export class Stack {
   @PrimaryGeneratedColumn()
   id: number;
