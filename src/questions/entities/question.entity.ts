@@ -1,5 +1,14 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Stack } from '../../stacks/entities/stack.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { UserAnswer } from '../../user-answer/entities/user-answer.entity';
 
 
 @Entity('quiz_questions')
@@ -16,10 +25,7 @@ export class Question {
   @Column({ type: 'varchar', length: 10 })
   correct_answer: string;
 
-  @Column({
-    type: 'varchar',
-    length: 20,
-  })
+  @Column({ type: 'varchar', length: 20 })
   difficulty: 'Easy' | 'Medium' | 'Hard';
 
   @Column({ type: 'jsonb' })
@@ -33,5 +39,7 @@ export class Question {
 
   @UpdateDateColumn({ type: 'timestamp', nullable: true })
   modified_datetime: Date;
-}
 
+  @OneToMany(() => UserAnswer, (answer) => answer.question)
+  answers: UserAnswer[];
+}

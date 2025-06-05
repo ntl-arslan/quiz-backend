@@ -1,47 +1,43 @@
+import { UserAnswer } from '../../user-answer/entities/user-answer.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+
 
 @Entity('quiz_users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  @IsString()
+  @Column({ type: 'varchar', length: 50, nullable: true })
   username: string;
 
-  @Column({ unique: true })
-  @IsEmail()
+  @Column({ type: 'varchar', length: 100, nullable: true })
   email: string;
 
-  @Column()
-  @IsString()
-  @MinLength(6)
+  @Column({ type: 'text' , nullable:true})
   password: string;
 
-  @Column({ default: 'active' })
-  @IsOptional()
-  @IsString()
+  @Column({ type: 'varchar', length: 20, default: 'active' })
   status: string;
 
-  @Column({ default: 'user' })
-  @IsOptional()
-  @IsString()
+  @Column({ type: 'varchar', length: 20, default: 'user' })
   role: string;
 
-  @Column({ nullable: true, type: 'text' })
-  @IsOptional()
-  token?: string;
+  @Column({ type: 'text', nullable: true })
+  token: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   datetime: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
   modified_datetime: Date;
+
+  @OneToMany(() => UserAnswer, (answer) => answer.user)
+  answers: UserAnswer[];
 }
