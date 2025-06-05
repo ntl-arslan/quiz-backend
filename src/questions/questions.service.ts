@@ -92,7 +92,7 @@ async getAllActiveQuestions ()
 						where:
 						{
 							name:name
-						}
+						} as unknown
 					});
 		if(getQuestionByNameRes.length>0)
 			{
@@ -100,7 +100,7 @@ async getAllActiveQuestions ()
 					status: 'SUCCESS',
 					httpcode: HttpStatus.OK,
 					message: 'All Active Questions fetched successfully.',
-					data: activeQuestionsResponse,
+					data: getQuestionByNameRes,
 				};
 			}else
 			{
