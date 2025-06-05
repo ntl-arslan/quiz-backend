@@ -23,63 +23,83 @@ export class UserAnswerService {
 			) {}
 	
 	
- async PostUserAnswer(createUserAnswerDto: CreateUserAnswerDto) {
-		const { user_id, question_id, choice } = createUserAnswerDto;
+async PostUserAnswer(createUserAnswerDto: CreateUserAnswerDto) {
+	const { user_id, question_id, choice } = createUserAnswerDto;
 
-		try {
-			// 1. Check if user exists
-			const user = await this.userRepo.findOne({ where: { id: user_id } });
-			if (!user) {
-				return {
-					status: 'FAILURE',
-					httpcode: HttpStatus.NOT_FOUND,
-					message: 'User does not exist',
-					data: [],
-				};
-			}
-
-			// 2. Check if question exists
-			const question = await this.questionRepo.findOne({ where: { id: question_id } });
-			if (!question) {
-				return {
-					status: 'FAILURE',
-					httpcode: HttpStatus.NOT_FOUND,
-					message: 'Question does not exist',
-					data: [],
-				};
-			}
-
-			// 3. Check if the answer is correct
-			const isCorrect = question.correct_answer === choice;
-
-			// 4. Save answer in quiz_users_answers
-			const userAnswer = this.userAnswerRepo.create({
-				user,
-				question,
-				is_correct: isCorrect,
-				datetime: new Date(),
-				modified_datetime: new Date(),
-				status:'active'
-
-			});
-
-			await this.userAnswerRepo.save(userAnswer);
-
+	try {
+		// 1. Check if user exists
+		const user = await this.userRepo.findOne({ where: { id: user_id } });
+		if (!user) {
 			return {
-				status: 'SUCCESS',
-				httpcode: HttpStatus.CREATED,
-				message: isCorrect
-					? 'Correct answer submitted successfully'
-					: 'Wrong answer submitted successfully',
-				data: userAnswer,
-			};
-		} catch (err) {
-			return {
-				status: 'ERROR',
-				httpcode: HttpStatus.EXPECTATION_FAILED,
-				message: 'Failed to submit answer',
+				status: 'FAILURE',
+				httpcode: HttpStatus.NOT_FOUND,
+				message: 'User does not exist',
 				data: [],
 			};
 		}
+
+		// 2. Check if question exists
+		const question = await this.questionRepo.findOne({ where: { id: question_id } });
+		if (!question) {
+			return {
+				status: 'FAILURE',
+				httpcode: HttpStatus.NOT_FOUND,
+				message: 'Question does not exist',
+				data: [],
+			};
+		}
+
+		// 3. Check if the user has already answered this question
+		const existingAnswer = await this.userAnswerRepo.findOne({
+			where: {
+				user: { id: user_id },
+				question: { id: question_id },
+			},
+			relations: ['user', 'question'],
+		});
+
+		if (existingAnswer) {
+			return {
+				status: 'FAILURE',
+				httpcode: HttpStatus.CONFLICT,
+				message: 'You have already answered this question.',
+				data: [],
+			};
+		}
+
+		// 4. Determine if the answer is correct
+		const isCorrect = question.correct_answer === choice;
+
+		// 5. Save the new answer
+		const userAnswer = this.userAnswerRepo.create({
+			user,
+			question,
+			is_correct: isCorrect,
+			datetime: new Date(),
+			modified_datetime: new Date(),
+			status: 'active',
+		});
+
+		await this.userAnswerRepo.save(userAnswer);
+
+		return {
+			status: 'SUCCESS',
+			httpcode: HttpStatus.CREATED,
+			message: isCorrect
+				? 'Correct answer submitted successfully'
+				: 'Wrong answer submitted successfully',
+			data: {
+				is_correct: isCorrect,
+			},
+		};
+	} catch (err) {
+		return {
+			status: 'ERROR',
+			httpcode: HttpStatus.EXPECTATION_FAILED,
+			message: 'Failed to submit answer',
+			data: [],
+		};
 	}
+}
+
 }
