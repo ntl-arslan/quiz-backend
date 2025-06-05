@@ -19,9 +19,9 @@ export class QuestionsController {
 	getStackByName(@Param('name') name: string) {
 		return this.questionsService.getQuestionsByName(name);
 	}
-	@Get('getQuestionByID/:id')
+	@Get('getQuestionByStackID/:id')
 	getStackByID(@Param('id') id: string) {
-		return this.questionsService.getQuestionByID(id);
+		return this.questionsService.getQuestionByStackID(id);
 	}
 	@Post('createQuestionAgainstStack')
 		createStack(@Body() createQuestionDto: CreateQuestionDto) {

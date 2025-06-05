@@ -125,7 +125,7 @@ async getAllActiveQuestions ()
 					};
 		}
 	}
-	 async getQuestionByID(id: string) {
+	 async getQuestionByStackID(id: string) {
     try {
       const questions = await this.questionRepo.find({
         where: {
