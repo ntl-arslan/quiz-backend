@@ -176,7 +176,7 @@ async getAllActiveQuestions ()
 			correct_answer: createQuestionDto.correct_answer,
 			difficulty: createQuestionDto.difficulty,
 			choice: createQuestionDto.choice,
-			status: createQuestionDto.status ?? 'active',
+			status: 'active',
 			stack,
 		});
 

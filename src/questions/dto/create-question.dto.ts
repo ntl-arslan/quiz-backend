@@ -19,8 +19,5 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsObject()
   choice: Record<string, string>;
-
-  @IsIn(['active', 'inactive'])
-  status?: string;
 }
 
