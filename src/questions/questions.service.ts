@@ -4,12 +4,16 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Question } from './entities/question.entity';
 import { Repository } from 'typeorm';
+import { Stack } from '../stacks/entities/stack.entity';
 
 @Injectable()
 export class QuestionsService {
 		constructor(
 			@InjectRepository(Question)
 			private readonly questionRepo: Repository<Question>,
+			@InjectRepository(Stack)
+			private readonly stackRepo: Repository<Stack>,
+			
 		) {}
 		
 async getAllQuestions () 
@@ -119,6 +123,90 @@ async getAllActiveQuestions ()
 						message: 'Failed to fetch questions.',
 						data: [],
 					};
+		}
+	}
+	async getQuestionByID(id: string) {
+		try {
+			const question = await this.questionRepo.findOne({
+				where: {
+					id: id,
+				} as unknown,
+			});
+			if (question) {
+				return {
+					status: 'SUCCESS',
+					httpcode: HttpStatus.OK,
+					message: 'Questions fetched successfully.',
+					data: question,
+				};
+			} else {
+				return {
+					status: 'FAILURE',
+					httpcode: HttpStatus.OK,
+					message: 'No Question found.',
+					data: [],
+				};
+			}
+		} catch (err) {
+			return {
+				status: 'ERROR',
+				httpcode: HttpStatus.EXPECTATION_FAILED,
+				message: 'Failed to fetch question.',
+				data: [],
+			};
+		}
+	}
+	async createQuestionAgainstStack (createQuestionDto:CreateQuestionDto) 
+	{
+		try
+		{
+			const stack = await this.stackRepo.findOne({ where: { id: createQuestionDto.stackId } });
+
+		if (!stack) {
+			return {
+					status: 'FAILURE',
+					httpcode: HttpStatus.OK,
+					message: 'No Such Stack Exists',
+					data: [],
+				};
+		}
+
+		const question = this.questionRepo.create({
+			question_text: createQuestionDto.question_text,
+			correct_answer: createQuestionDto.correct_answer,
+			difficulty: createQuestionDto.difficulty,
+			choice: createQuestionDto.choice,
+			status: createQuestionDto.status ?? 'active',
+			stack,
+		});
+
+		const saveQuestionResponse= await this.questionRepo.save(question);
+		if(saveQuestionResponse)
+			{
+				 return {
+				status: 'SUCCESS',
+				httpcode: HttpStatus.OK,
+				message: 'Question Created Against Stack',
+				data: saveQuestionResponse,
+			};
+			}
+			else
+			{
+					 return {
+				status: 'FAILURE',
+				httpcode: HttpStatus.OK,
+				message: 'No Question Created',
+				data: [],
+			};
+			}
+		}catch(err)
+		{
+			 return {
+				status: 'ERROR',
+				httpcode: HttpStatus.EXPECTATION_FAILED,
+				message: 'Failed to create question against stack.',
+				data: [],
+			};
 		}
 	}
 	

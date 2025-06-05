@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
+import { CreateQuestionDto } from './dto/create-question.dto';
 
 
 @Controller('questions')
@@ -15,7 +16,15 @@ export class QuestionsController {
 		return this.questionsService.getAllActiveQuestions();
 	}
 	@Get('getQuestionsByName/:name')
-  getStackByName(@Param('name') name: string) {
-    return this.questionsService.getQuestionsByName(name);
-  }
+	getStackByName(@Param('name') name: string) {
+		return this.questionsService.getQuestionsByName(name);
+	}
+	@Get('getQuestionByID/:id')
+	getStackByID(@Param('id') id: string) {
+		return this.questionsService.getQuestionByID(id);
+	}
+	@Post('createQuestionAgainstStack')
+		createStack(@Body() createQuestionDto: CreateQuestionDto) {
+			return this.questionsService.createQuestionAgainstStack(createQuestionDto);
+		}
 }
