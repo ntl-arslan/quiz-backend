@@ -66,7 +66,7 @@ export class AuthService {
       };
     }
   }
-  async login(createLoginAuthDto: LoginUserDto, res: Response) { // Add res parameter
+  async login(createLoginAuthDto: LoginUserDto, res: any) { // Add res parameter
     try {
       const { email, password } = createLoginAuthDto;
 
@@ -112,7 +112,7 @@ export class AuthService {
         sameSite: 'strict', // or 'lax' if needed
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         path: '/',
-      });
+      }) ;
 
       return {
         status: 'SUCCESS',
