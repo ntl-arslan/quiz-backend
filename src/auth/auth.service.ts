@@ -66,7 +66,7 @@ export class AuthService {
       };
     }
   }
-  async login(createLoginAuthDto: LoginUserDto) {
+  async login(createLoginAuthDto: LoginUserDto, res: Response) { // Add res parameter
     try {
       const { email, password } = createLoginAuthDto;
 
@@ -105,20 +105,26 @@ export class AuthService {
 
       const { password: _, ...userWithoutPassword } = user;
 
+      // Set cookie
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // secure in production
+        sameSite: 'strict', // or 'lax' if needed
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        path: '/',
+      });
+
       return {
         status: 'SUCCESS',
         httpcode: HttpStatus.OK,
         message: 'Login successful.',
-        data: {
-          ...userWithoutPassword,
-          token,
-        },
+        data: userWithoutPassword,
       };
     } catch (err) {
       console.log(err);
       return {
         status: 'ERROR',
-        httpcode: HttpStatus.EXPECTATION_FAILED,
+        httpcode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'Failed to login.',
         data: [],
       };
