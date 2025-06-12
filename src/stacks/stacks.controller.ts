@@ -14,14 +14,15 @@ import { CreateStackDto } from './dto/create-stack.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('stacks')
+//@UseGuards(JwtAuthGuard)
 export class StacksController {
 	constructor(private readonly stacksService: StacksService) {}
-
+	
 	@Get('all')
 	getAllStacks() {
 		return this.stacksService.getAllStacks();
 	}
-		@UseGuards(JwtAuthGuard)
+	
 	@Get('allActiveStacks')
 	allActiveStacks() {
 		return this.stacksService.allActiveStacks();

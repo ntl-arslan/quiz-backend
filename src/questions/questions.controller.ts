@@ -1,50 +1,53 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Put,
+	Controller,
+	Get,
+	Post,
+	Body,
+	Patch,
+	Param,
+	Delete,
+	Put,
+	UseGuards,
 } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('questions')
+//@UseGuards(JwtAuthGuard)
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
+	constructor(private readonly questionsService: QuestionsService) {}
 
-  @Get('all')
-  getAllQuestions() {
-    return this.questionsService.getAllQuestions();
-  }
-  @Get('getAllActiveQuestions')
-  getAllActiveQuestions() {
-    return this.questionsService.getAllActiveQuestions();
-  }
-  @Get('getQuestionsByName/:name')
-  getStackByName(@Param('name') name: string) {
-    return this.questionsService.getQuestionsByName(name);
-  }
-  @Get('getQuestionByStackID/:id')
-  getStackByID(@Param('id') id: string) {
-    return this.questionsService.getQuestionByStackID(id);
-  }
-  @Post('createQuestionAgainstStack')
-  createStack(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.createQuestionAgainstStack(createQuestionDto);
-  }
-  @Put('deleteQuestionsAgainstStack/:id')
-  deleteStack(@Param('id') id: string) {
-    return this.questionsService.deleteQuestionsAgainstStack(id);
-  }
-  @Put('updateQuestion/:id')
-  updateQuestion(
-    @Param('id') id: string,
-    @Body() updateDto: UpdateQuestionDto,
-  ) {
-    return this.questionsService.updateQuestion(parseInt(id), updateDto);
-  }
+	@Get('all')
+	getAllQuestions() {
+		return this.questionsService.getAllQuestions();
+	}
+	@Get('getAllActiveQuestions')
+	getAllActiveQuestions() {
+		return this.questionsService.getAllActiveQuestions();
+	}
+	@Get('getQuestionsByName/:name')
+	getStackByName(@Param('name') name: string) {
+		return this.questionsService.getQuestionsByName(name);
+	}
+	@Get('getQuestionByStackID/:id')
+	getStackByID(@Param('id') id: string) {
+		return this.questionsService.getQuestionByStackID(id);
+	}
+	@Post('createQuestionAgainstStack')
+	createStack(@Body() createQuestionDto: CreateQuestionDto) {
+		return this.questionsService.createQuestionAgainstStack(createQuestionDto);
+	}
+	@Put('deleteQuestionsAgainstStack/:id')
+	deleteStack(@Param('id') id: string) {
+		return this.questionsService.deleteQuestionsAgainstStack(id);
+	}
+	@Put('updateQuestion/:id')
+	updateQuestion(
+		@Param('id') id: string,
+		@Body() updateDto: UpdateQuestionDto,
+	) {
+		return this.questionsService.updateQuestion(parseInt(id), updateDto);
+	}
 }
