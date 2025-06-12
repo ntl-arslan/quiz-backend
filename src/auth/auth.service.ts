@@ -108,7 +108,7 @@ export class AuthService {
 			// Set cookie
 			res.cookie('access_token', token, {
 				httpOnly: true,
-				 SameSite: 'None', 
+				sameSite: 'None', 
 				secure: process.env.NODE_ENV === 'production', 
 				maxAge: 24 * 60 * 60 * 1000, 
 				path: '/',
